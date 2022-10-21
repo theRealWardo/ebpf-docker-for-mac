@@ -12,8 +12,10 @@ int hello(void *ctx) {
 """
 
 b = BPF(text=prog)
-#b.attach_kprobe(event="sys_clone", fn_name="hello")
-b.attach_kprobe(event="__x64_sys_clone", fn_name="hello")
+# If attaching the following kprobe fails, you may have to change the event parameter
+# to one supported by your kernel. In your container, run `grep sys_clone /proc/kallsyms`
+# to identify the sys_clone symbol for your kernel.
+b.attach_kprobe(event="__arm64_sys_clone", fn_name="hello")
 b.trace_print()
 
 # This prints out a trace line every time the clone system call is called
